@@ -1,0 +1,19 @@
+{
+  "name": "pizza-plain",
+  "version": "0.0.1",
+  "author": "Thomas Jaggi <thomas@responsive.ch>",
+  "type": "module",
+  "main": "index.js",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --env-file .env --watch --no-warnings index.js",
+    "test": "node --test test",
+    "tsc": "tsc --noEmit -p jsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.2",
+    "typescript": "^5.4.3"
+  }
+}
