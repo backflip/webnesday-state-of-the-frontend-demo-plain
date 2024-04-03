@@ -9,49 +9,34 @@ import { html } from "./import/utils.js";
 
 class Pizze extends HTMLElement {
   /** @type {{ [key: Pizza["name"]]: Topping["name"][] }} */
-  pizze = {};
+  pizzas = {};
 
   constructor() {
     super();
   }
 
   connectedCallback() {
-    Promise.all([
-      this.fetchTable("pizzas_and_toppings"),
-      this.fetchTable("pizzas"),
-      this.fetchTable("toppings"),
-    ]).then(
-      (
-        /** @type {[PizzaAndTopping[], Pizza[], Topping[]]} */ [
-          pizzas_and_toppings,
-          pizzas,
-          toppings,
-        ]
-      ) => {
-        this.pizze = pizzas_and_toppings.reduce((acc, item) => {
-          const pizza = pizzas.find((subItem) => subItem.id === item.pizza_id);
-          const topping = toppings.find(
-            (subItem) => subItem.id === item.topping_id
-          );
+    this.fetch().then((data) => {
+      this.pizzas = data.reduce((acc, item) => {
+        const { pizza, topping } = item;
 
-          if (pizza?.name && topping?.name) {
-            acc[pizza.name] = acc[pizza.name] || [];
+        if (pizza?.name && topping?.name) {
+          acc[pizza.name] = acc[pizza.name] || [];
 
-            acc[pizza.name].push(topping.name);
-          }
+          acc[pizza.name].push(topping.name);
+        }
 
-          return acc;
-        }, {});
+        return acc;
+      }, {});
 
-        this.render();
-      }
-    );
+      this.render();
+    });
   }
 
   render() {
     this.innerHTML = html`
       <ul>
-        ${Object.entries(this.pizze)
+        ${Object.entries(this.pizzas)
           .map(
             ([name, toppings]) => html`<li>
               <h2>${name}</h2>
@@ -71,9 +56,12 @@ class Pizze extends HTMLElement {
     `;
   }
 
-  async fetchTable(table) {
+  /**
+   * @returns {Promise<PizzaAndTopping[]>}
+   */
+  async fetch() {
     const data = await fetch(
-      `https://vfqytfnobaqwcmqqnijb.supabase.co/rest/v1/${table}?select=*`,
+      `https://vfqytfnobaqwcmqqnijb.supabase.co/rest/v1/pizzas_and_toppings?select=id,pizza:pizzas(id,name),topping:toppings(id,name)`,
       {
         headers: {
           apikey: String(window.env.SUPABASE_ANON_TOKEN),

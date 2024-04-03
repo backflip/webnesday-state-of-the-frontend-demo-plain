@@ -10,7 +10,6 @@ export type Topping = {
 
 export type PizzaAndTopping = {
   id: BigInteger;
-  name: string;
-  pizza_id: Pizza["id"];
-  topping_id: Topping["id"];
+  pizza: Pizza;
+  topping: Toppin;
 };
