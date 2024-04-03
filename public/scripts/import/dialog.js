@@ -9,8 +9,10 @@ class Dialog extends HTMLElement {
   }
 
   connectedCallback() {
+    const buttonText = this.getAttribute("data-button-text");
+
     this.innerHTML = html`
-      <button type="button" data-open>Details</button>
+      <button type="button" data-open>${buttonText}</button>
       <dialog>
         <button type="button" data-close>Close</button>
         ${this.innerHTML}

@@ -41,7 +41,7 @@ class Pizze extends HTMLElement {
             ([name, toppings]) => html`<li>
               <h2>${name}</h2>
 
-              <custom-dialog>
+              <custom-dialog data-button-text="Details">
                 <h1>${name}</h1>
                 <ul>
                   ${toppings
